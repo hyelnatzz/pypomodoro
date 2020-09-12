@@ -1,3 +1,4 @@
+from turtle import bgcolor
 from typing import Sized
 import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import RELIEF_FLAT
@@ -26,8 +27,12 @@ p_short_break = 10
 #p_long_break = 60 * 20
 p_long_break = 20
 time_string = '00:00'
-pomodoro_count = 1
-
+pomodoro_count = sg.popup_get_text("Pomodoro session? 'long' or 'short'", title='Session length', size=(15, 1), background_color=black_bg)
+if pomodoro_count not in ['long', 'short']:
+    while pomodoro_count not in ['long', 'short']:
+        sg.popup_ok("Enter 'long' or 'short'")
+        pomodoro_count = sg.popup_get_text("Pomodoro session? 'long' or 'short'", title='Session length', size=(15, 1), background_color=black_bg)
+    
 max_session = 4
 current_session = 1
 current_session_time = p_session
@@ -36,7 +41,6 @@ current_break = 1
 pomodoro_detail_frame = [[sg.T('Pomodoro Session', size=(None, 1), background_color=black_bg,  font=('arial', '15','bold')), sg.T(current_session, size=(None, 1), key='current_session_label', background_color=black_bg,  font=('arial', '15','bold'))]]
 current_event_frame = [[sg.T('About to start', size=(14,1), key='current_event', background_color=black_bg,  font=('arial', '15','bold'))]]
 
-#seconds_frame = [[sg.T('0', size=(1,1), key='seconds_label')]]
 
 counter_frame = [[sg.T(time_string, size=(None, 1), key='label', background_color='#000000', font=('arial', '70', 'bold'), pad=((30, 20), (0, 0)))]]
 
@@ -79,6 +83,8 @@ while True:
             window['label'].update('00:00')
             paused = True
             timer = 0
+            current_session = 0
+            window['current_session_label'].update(current_session)
             window['current_event'].update('Start Session')
         else:
             in_session = True
@@ -112,6 +118,8 @@ while True:
                         if session_continue == 'Yes':
                                 current_break = 0
                         else:
+                            current_session = 0
+                            window['current_session_label'].update(current_session)
                             in_session = False
                             window['pauseBtn'].update(visible=False)
                             window['startBtn'].update(button_color=btn_color)
@@ -121,6 +129,7 @@ while True:
                             paused = True
                             timer = 0
                             current_session_time = p_session
+                            
                    # print(timer)
                 else:
                     
@@ -134,10 +143,10 @@ while True:
                         window['current_session_label'].update(current_session)
                     if break_time:
 
-                        if pomodoro_count == 1 and current_break == 2:
+                        if pomodoro_count == 'short' and current_break == 2:
                             current_session_time = p_long_break
                             print('Long break')
-                        elif pomodoro_count == 2 and current_break == 4:
+                        elif pomodoro_count == 'long' and current_break == 4:
                             current_session_time = p_long_break
                             print('long break')
                         else:
