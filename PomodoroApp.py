@@ -20,12 +20,12 @@ red_bg = ('white','#aa0000')
 btn_color = ('white', '#005511')
 
 timer = 0
-#p_session = 60 * 25
-p_session = 25
-#p_short_break = 60 * 5
-p_short_break = 10
-#p_long_break = 60 * 20
-p_long_break = 20
+p_session = 60 * 25
+#p_session = 25
+p_short_break = 60 * 5
+#p_short_break = 10
+p_long_break = 60 * 20
+#p_long_break = 20
 time_string = '00:00'
 pomodoro_count = sg.popup_get_text("Pomodoro session? 'long' or 'short'", title='Session length', size=(15, 1), background_color=black_bg)
 if pomodoro_count not in ['long', 'short']:
@@ -92,6 +92,8 @@ while True:
             window['startBtn'].update(button_color=red_bg)
             window['startBtn'].update('Stop')
             paused = False
+            current_session = 1
+            window['current_session_label'].update(current_session)
             window['current_event'].update('In Session')
 
     if in_session:
